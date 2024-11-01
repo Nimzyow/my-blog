@@ -1,9 +1,164 @@
 ---
-title: My First Blog Post
+title: "Building Your First Docker Image: A Beginner's Guide"
 date: "2024-03-21"
-description: This is my first blog post
+description: "Learn how to create and optimize your first Docker image for a Node.js application, with best practices and practical examples."
 ---
 
-# My First Blog Post
+# Building Your First Docker Image: A Beginner's Guide
 
-Hello world! This is my first blog post using Next.js and MDX.
+As a software engineer, containerization has become an essential skill. In this post, I'll walk you through creating your first Docker image for a Node.js application, sharing the lessons I learned along the way.
+
+## Prerequisites
+
+Before we begin, make sure you have:
+
+- Docker installed on your machine
+- Basic knowledge of Node.js
+- A simple Node.js application to containerize
+
+## Creating Your First Dockerfile
+
+Let's start with a basic Dockerfile:
+
+```dockerfile
+FROM node:18-alpine
+
+WORKDIR /app
+
+COPY package*.json ./
+RUN npm install
+
+COPY . .
+
+EXPOSE 3000
+CMD ["npm", "start"]
+```
+
+### Base Image Selection
+
+I chose `node:18-alpine` because:
+
+- Alpine Linux is incredibly lightweight
+- It contains just what we need to run Node.js
+- Version 18 is LTS (Long Term Support)
+
+### Best Practices I Learned
+
+1. **Layer Caching**
+   Instead of copying everything at once, we copy `package.json` first. This means if our dependencies don't change, Docker can use cached layers for subsequent builds.
+
+2. **Multi-stage Builds**
+   For production, you might want to use a multi-stage build:
+
+```dockerfile
+# Build stage
+FROM node:18-alpine AS builder
+WORKDIR /app
+COPY package*.json ./
+RUN npm install
+COPY . .
+RUN npm run build
+
+# Production stage
+FROM node:18-alpine
+WORKDIR /app
+COPY --from=builder /app/dist ./dist
+COPY package*.json ./
+RUN npm install --production
+EXPOSE 3000
+CMD ["npm", "start"]
+```
+
+## Building the Image
+
+Run the build command:
+
+```bash
+docker build -t myapp:1.0 .
+```
+
+## Common Pitfalls to Avoid
+
+1. **Ignoring .dockerignore**
+   Create a `.dockerignore` file to exclude unnecessary files:
+
+```
+node_modules
+npm-debug.log
+.git
+.env
+```
+
+2. **Running as Root**
+   Add a non-root user for security:
+
+```dockerfile
+RUN addgroup -g 1001 -S nodejs
+RUN adduser -S nodejs -u 1001
+USER nodejs
+```
+
+3. **Not Optimizing Image Size**
+
+- Remove development dependencies
+- Clean npm cache
+- Use multi-stage builds
+
+## Testing Your Container
+
+Run your container:
+
+```bash
+docker run -p 3000:3000 myapp:1.0
+```
+
+## Monitoring and Debugging
+
+Some useful commands I use daily:
+
+```bash
+# Check container logs
+docker logs <container-id>
+
+# Execute commands inside container
+docker exec -it <container-id> sh
+
+# Monitor container resources
+docker stats
+```
+
+## Production Considerations
+
+1. **Environment Variables**
+   Use ARG and ENV instructions:
+
+```dockerfile
+ARG NODE_ENV=production
+ENV NODE_ENV=$NODE_ENV
+```
+
+2. **Health Checks**
+   Add a health check to your Dockerfile:
+
+```dockerfile
+HEALTHCHECK --interval=30s --timeout=3s \
+  CMD curl -f http://localhost:3000/health || exit 1
+```
+
+## Conclusion
+
+Building Docker images is a crucial skill for modern development. While this guide covers the basics, remember that optimization is an iterative process. Start simple, then optimize based on your specific needs.
+
+## Next Steps
+
+- Learn about Docker Compose for multi-container applications
+- Explore Kubernetes for container orchestration
+- Implement CI/CD pipelines with Docker
+
+Happy containerizing! 🐳
+
+## Resources
+
+- [Official Docker Documentation](https://docs.docker.com/)
+- [Node.js Docker Best Practices](https://nodejs.org/en/docs/guides/nodejs-docker-webapp)
+- [Docker Security Best Practices](https://docs.docker.com/develop/security-best-practices/)

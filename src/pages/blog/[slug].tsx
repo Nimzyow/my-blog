@@ -4,6 +4,7 @@ import path from "path";
 import matter from "gray-matter";
 import { MDXRemote, MDXRemoteSerializeResult } from "next-mdx-remote";
 import { serialize } from "next-mdx-remote/serialize";
+import Layout from "@/components/Layout";
 
 interface Props {
   frontMatter: {
@@ -16,13 +17,15 @@ interface Props {
 
 export default function BlogPost({ frontMatter, mdxSource }: Props) {
   return (
-    <div className="max-w-3xl mx-auto px-4 py-8">
-      <h1 className="text-4xl font-bold mb-4">{frontMatter.title}</h1>
-      <p className="text-gray-600 mb-8">{frontMatter.date}</p>
-      <div className="prose lg:prose-xl">
-        <MDXRemote {...mdxSource} />
+    <Layout>
+      <div className="max-w-3xl mx-auto px-4 py-8">
+        <h1 className="text-4xl font-bold mb-4">{frontMatter.title}</h1>
+        <p className="text-gray-600 mb-8">{frontMatter.date}</p>
+        <div className="prose lg:prose-xl">
+          <MDXRemote {...mdxSource} />
+        </div>
       </div>
-    </div>
+    </Layout>
   );
 }
 

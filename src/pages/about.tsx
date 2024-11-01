@@ -18,7 +18,7 @@ export default function About() {
             <div>
               <h2 className="text-2xl font-semibold mb-4">Hello! 👋</h2>
               <p className="text-lg">
-                I'm [Your Name], a [Your Role] based in [Your Location].
+                I&apos;m [Your Name], a [Your Role] based in [Your Location].
               </p>
             </div>
           </div>

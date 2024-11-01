@@ -2,6 +2,7 @@ import Link from "next/link";
 import fs from "fs";
 import path from "path";
 import matter from "gray-matter";
+import Layout from "@/components/Layout";
 
 interface Post {
   slug: string;
@@ -14,25 +15,27 @@ interface Post {
 
 export default function Home({ posts }: { posts: Post[] }) {
   return (
-    <div className="max-w-4xl mx-auto px-4 py-8">
-      <h1 className="text-4xl font-bold mb-8">My Blog</h1>
-      <div className="space-y-8">
-        {posts.map((post) => (
-          <article
-            key={post.slug}
-            className="border rounded-lg p-6 hover:shadow-lg transition"
-          >
-            <Link href={`/blog/${post.slug}`}>
-              <h2 className="text-2xl font-semibold mb-2">
-                {post.frontMatter.title}
-              </h2>
-              <p className="text-gray-600 mb-2">{post.frontMatter.date}</p>
-              <p>{post.frontMatter.description}</p>
-            </Link>
-          </article>
-        ))}
+    <Layout>
+      <div className="max-w-4xl mx-auto px-4 py-8">
+        <h1 className="text-4xl font-bold mb-8">My Blog</h1>
+        <div className="space-y-8">
+          {posts.map((post) => (
+            <article
+              key={post.slug}
+              className="border rounded-lg p-6 hover:shadow-lg transition"
+            >
+              <Link href={`/blog/${post.slug}`}>
+                <h2 className="text-2xl font-semibold mb-2">
+                  {post.frontMatter.title}
+                </h2>
+                <p className="text-gray-600 mb-2">{post.frontMatter.date}</p>
+                <p>{post.frontMatter.description}</p>
+              </Link>
+            </article>
+          ))}
+        </div>
       </div>
-    </div>
+    </Layout>
   );
 }
 
