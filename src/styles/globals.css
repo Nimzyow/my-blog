@@ -5,19 +5,21 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  --accent: #10b981; /* emerald-500 for a hacker green */
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
     --background: #0a0a0a;
     --foreground: #ffffff;
+    --accent: #10b981; /* emerald-500 for a hacker green */
   }
 }
 
 body {
   color: var(--foreground);
   background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: 'Courier New', Courier, monospace; /* A more hacker-like font */
 }
 
 /* Style all prose content */
@@ -37,19 +39,39 @@ body {
 }
 
 .prose a {
-  color: #3b82f6 !important; /* blue-500 */
+  color: var(--accent) !important; /* Use green for links */
 }
 
 .prose a:hover {
-  color: #60a5fa !important; /* blue-400 */
+  color: #34d399 !important; /* emerald-400 for hover */
+}
+
+.prose code {
+  color: var(--foreground) !important;
+  background-color: #1f2937; /* dark background for code */
+  padding: 0.2em 0.4em;
+  border-radius: 0.3em;
 }
 
 @media (prefers-color-scheme: dark) {
   .prose a {
-    color: #60a5fa !important; /* blue-400 */
+    color: var(--accent) !important;
   }
 
   .prose a:hover {
-    color: #93c5fd !important; /* blue-300 */
+    color: #34d399 !important;
   }
+}
+
+/* Add green accents to borders and other elements */
+.border-accent {
+  border-color: var(--accent);
+}
+
+.text-accent {
+  color: var(--accent);
+}
+
+.hover\:text-accent:hover {
+  color: var(--accent);
 }
