@@ -37,22 +37,28 @@ export default function Home({ posts }: { posts: Post[] }) {
 }
 
 export async function getStaticProps() {
-  // Get files from the posts directory
   const files = fs.readdirSync(path.join("content/posts"));
 
-  // Get slug and frontmatter from posts
-  const posts = files.map((filename) => {
-    const slug = filename.replace(".mdx", "");
-    const markdownWithMeta = fs.readFileSync(
-      path.join("content/posts", filename),
-      "utf-8"
-    );
-    const { data: frontMatter } = matter(markdownWithMeta);
-    return {
-      slug,
-      frontMatter,
-    };
-  });
+  const posts = files
+    .map((filename) => {
+      const slug = filename.replace(".mdx", "");
+      const markdownWithMeta = fs.readFileSync(
+        path.join("content/posts", filename),
+        "utf-8"
+      );
+      const { data: frontMatter } = matter(markdownWithMeta);
+      return {
+        slug,
+        frontMatter,
+      };
+    })
+    .sort((a, b) => {
+      // Sort by date in descending order (newest first)
+      return (
+        new Date(b.frontMatter.date).getTime() -
+        new Date(a.frontMatter.date).getTime()
+      );
+    });
 
   return {
     props: {
