@@ -1,7 +1,7 @@
 name: Deploy to DigitalOcean
 on:
   push:
-    branches: [main] # or your default branch
+    branches: [master]
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -21,7 +21,7 @@ jobs:
         uses: docker/build-push-action@v4
         with:
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/your-image-name:latest
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/my-blog:latest
 
       - name: Deploy to Digital Ocean
         uses: appleboy/ssh-action@master
@@ -31,16 +31,16 @@ jobs:
           key: ${{ secrets.DEPLOY_KEY }}
           script: |
             # Pull the latest image
-            docker pull ${{ secrets.DOCKERHUB_USERNAME }}/your-image-name:latest
+            docker pull ${{ secrets.DOCKERHUB_USERNAME }}/my-blog:latest
 
             # Stop the current container
-            docker stop $(docker ps -q --filter ancestor=${{ secrets.DOCKERHUB_USERNAME }}/your-image-name:latest) 2>/dev/null || true
+            docker stop $(docker ps -q --filter ancestor=${{ secrets.DOCKERHUB_USERNAME }}/my-blog:latest) 2>/dev/null || true
 
             # Remove old container
-            docker rm $(docker ps -aq --filter ancestor=${{ secrets.DOCKERHUB_USERNAME }}/your-image-name:latest) 2>/dev/null || true
+            docker rm $(docker ps -aq --filter ancestor=${{ secrets.DOCKERHUB_USERNAME }}/my-blog:latest) 2>/dev/null || true
 
             # Run the new container
-            docker run -d -p 3000:3000 ${{ secrets.DOCKERHUB_USERNAME }}/your-image-name:latest
+            docker run -d -p 3000:3000 ${{ secrets.DOCKERHUB_USERNAME }}/my-blog:latest
 
             # Clean up old images
             docker image prune -f
