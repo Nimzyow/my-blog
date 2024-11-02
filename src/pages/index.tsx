@@ -17,7 +17,7 @@ export default function Home({ posts }: { posts: Post[] }) {
   return (
     <Layout>
       <div className="max-w-4xl mx-auto px-4 py-8">
-        <h1 className="text-4xl font-bold mb-8">My Blog</h1>
+        <h1 className="text-4xl font-bold mb-8">WASSUUUUUUUUUPPP</h1>
         <div className="space-y-8">
           {posts.map((post) => (
             <article
