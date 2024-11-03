@@ -1,4 +1,21 @@
 ---
+- name: Build and push Docker image
+  hosts: localhost
+  tasks:
+    - name: Build Docker image
+      community.docker.docker_image:
+        build:
+          path: ../
+        name: nimzy/my-blog
+        tag: latest
+        source: build
+
+    - name: Push Docker image to Docker Hub
+      community.docker.docker_image:
+        name: nimzy/my-blog:latest
+        push: true
+        source: local
+
 - name: Update website
   hosts: droplet
   become: true
