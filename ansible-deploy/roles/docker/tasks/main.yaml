@@ -1,41 +1,41 @@
 ---
 - name: Install required packages
-  apt:
+  ansible.builtin.apt:
     name:
       - apt-transport-https
       - ca-certificates
       - curl
       - software-properties-common
     state: present
-    update_cache: yes
+    update_cache: true
 
 - name: Add Docker GPG key
-  apt_key:
+  ansible.builtin.apt_key:
     url: https://download.docker.com/linux/ubuntu/gpg
     state: present
 
 - name: Add Docker repository
-  apt_repository:
+  ansible.builtin.apt_repository:
     repo: deb [arch=amd64] https://download.docker.com/linux/ubuntu focal stable
     state: present
 
 - name: Install Docker
-  apt:
+  ansible.builtin.apt:
     name: docker-ce
     state: present
-    update_cache: yes
+    update_cache: true
 
 - name: Pull Docker image
-  docker_image:
+  community.docker.docker_image:
     name: your-docker-image:latest
     source: pull
-    force_source: yes
+    force_source: true
 
 - name: Run Docker container
-  docker_container:
+  community.docker.docker_container:
     name: blog
-    image: your-docker-image:latest
-    state: started
-    recreate: yes
+    image: nimzy/my-blog:latest
+    state: present
+    recreate: true
     published_ports:
       - "3000:3000"

@@ -10,7 +10,7 @@ print_status() {
 print_status "34" "Starting update-website.sh"
 
 # Run ansible playbook to update the website
-if ansible-playbook ansible-deploy/deploy.yaml; then
+if ansible-playbook -i ansible-deploy/inventory.yaml ansible-deploy/deploy.yaml; then
     print_status "32" "Finished update-website.sh"
     exit 0
 else
