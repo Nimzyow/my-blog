@@ -1,164 +1,49 @@
 ---
-title: "Building Your First Docker Image: A Beginner's Guide"
+title: "How I built my blog"
 date: "2024-03-21"
-description: "Learn how to create and optimize your first Docker image for a Node.js application, with best practices and practical examples."
+description: "Learn how to quickly build a blog using...AI"
 ---
 
-# Building Your First Docker Image: A Beginner's Guide
+# Building a Blog with Cursor.AI
 
-As a software engineer, containerization has become an essential skill. In this post, I'll walk you through creating your first Docker image for a Node.js application, sharing the lessons I learned along the way.
+In this post, I'll walk you through how I built this blog using Cursor.AI, Next.js, and MDX. Let's dive in!
 
-## Prerequisites
+## What is Cursor.AI?
 
-Before we begin, make sure you have:
+Cursor.AI is an AI-powered code editor that helps you write code faster and more efficiently. It's like having a pair programmer that understands your codebase and can help you write better code.
 
-- Docker installed on your machine
-- Basic knowledge of Node.js
-- A simple Node.js application to containerize
+## The Setup Process
 
-## Creating Your First Dockerfile
+1. First, I installed Cursor.AI from [cursor.so](https://cursor.so)
+2. Created a new Next.js project with:
+   ```bash
+   npx create-next-app@latest my-blog --typescript --tailwind
+   ```
+3. Added MDX support for writing blog posts
+4. Set up the basic file structure:
+   - `/content/posts/` for blog posts
+   - `/src/pages/` for Next.js pages
+   - `/src/components/` for React components
 
-Let's start with a basic Dockerfile:
+## Key Features
 
-```dockerfile
-FROM node:18-alpine
+- **MDX Support**: Write blog posts in Markdown with React components
+- **Tailwind CSS**: Beautiful, responsive styling
+- **TypeScript**: Type safety and better developer experience
+- **Static Site Generation**: Fast loading times and great SEO
 
-WORKDIR /app
+## Deployment
 
-COPY package*.json ./
-RUN npm install
+I deployed the blog using:
 
-COPY . .
-
-EXPOSE 3000
-CMD ["npm", "start"]
-```
-
-### Base Image Selection
-
-I chose `node:18-alpine` because:
-
-- Alpine Linux is incredibly lightweight
-- It contains just what we need to run Node.js
-- Version 18 is LTS (Long Term Support)
-
-### Best Practices I Learned
-
-1. **Layer Caching**
-   Instead of copying everything at once, we copy `package.json` first. This means if our dependencies don't change, Docker can use cached layers for subsequent builds.
-
-2. **Multi-stage Builds**
-   For production, you might want to use a multi-stage build:
-
-```dockerfile
-# Build stage
-FROM node:18-alpine AS builder
-WORKDIR /app
-COPY package*.json ./
-RUN npm install
-COPY . .
-RUN npm run build
-
-# Production stage
-FROM node:18-alpine
-WORKDIR /app
-COPY --from=builder /app/dist ./dist
-COPY package*.json ./
-RUN npm install --production
-EXPOSE 3000
-CMD ["npm", "start"]
-```
-
-## Building the Image
-
-Run the build command:
-
-```bash
-docker build -t myapp:1.0 .
-```
-
-## Common Pitfalls to Avoid
-
-1. **Ignoring .dockerignore**
-   Create a `.dockerignore` file to exclude unnecessary files:
-
-```
-node_modules
-npm-debug.log
-.git
-.env
-```
-
-2. **Running as Root**
-   Add a non-root user for security:
-
-```dockerfile
-RUN addgroup -g 1001 -S nodejs
-RUN adduser -S nodejs -u 1001
-USER nodejs
-```
-
-3. **Not Optimizing Image Size**
-
-- Remove development dependencies
-- Clean npm cache
-- Use multi-stage builds
-
-## Testing Your Container
-
-Run your container:
-
-```bash
-docker run -p 3000:3000 myapp:1.0
-```
-
-## Monitoring and Debugging
-
-Some useful commands I use daily:
-
-```bash
-# Check container logs
-docker logs <container-id>
-
-# Execute commands inside container
-docker exec -it <container-id> sh
-
-# Monitor container resources
-docker stats
-```
-
-## Production Considerations
-
-1. **Environment Variables**
-   Use ARG and ENV instructions:
-
-```dockerfile
-ARG NODE_ENV=production
-ENV NODE_ENV=$NODE_ENV
-```
-
-2. **Health Checks**
-   Add a health check to your Dockerfile:
-
-```dockerfile
-HEALTHCHECK --interval=30s --timeout=3s \
-  CMD curl -f http://localhost:3000/health || exit 1
-```
+1. Docker for containerization
+2. GitHub Actions for CI/CD
+3. DigitalOcean for hosting
+4. Nginx as a reverse proxy
+5. Certbot for SSL certificates
 
 ## Conclusion
 
-Building Docker images is a crucial skill for modern development. While this guide covers the basics, remember that optimization is an iterative process. Start simple, then optimize based on your specific needs.
+Using Cursor.AI significantly sped up the development process. Its code completion and AI-powered suggestions helped me write better code faster, especially when setting up the blog's infrastructure.
 
-## Next Steps
-
-- Learn about Docker Compose for multi-container applications
-- Explore Kubernetes for container orchestration
-- Implement CI/CD pipelines with Docker
-
-Happy containerizing! 🐳
-
-## Resources
-
-- [Official Docker Documentation](https://docs.docker.com/)
-- [Node.js Docker Best Practices](https://nodejs.org/en/docs/guides/nodejs-docker-webapp)
-- [Docker Security Best Practices](https://docs.docker.com/develop/security-best-practices/)
+The best part? This entire blog post was written with the help of Cursor.AI! 😄
