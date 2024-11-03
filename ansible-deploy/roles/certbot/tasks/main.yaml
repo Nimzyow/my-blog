@@ -1,0 +1,16 @@
+---
+- name: Install Certbot
+  apt:
+    name:
+      - certbot
+      - python3-certbot-nginx
+    state: present
+
+- name: Obtain SSL certificate
+  command: >
+    certbot --nginx
+    -d {{ domain_name }} -d www.{{ domain_name }}
+    --non-interactive --agree-tos
+    --email your-email@example.com
+  args:
+    creates: /etc/letsencrypt/live/{{ domain_name }}

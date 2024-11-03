@@ -1,0 +1,19 @@
+---
+- name: Update website
+  hosts: droplet
+  become: yes
+  tasks:
+    - name: Pull latest Docker image
+      docker_image:
+        name: your-docker-image:latest
+        source: pull
+        force_source: yes
+
+    - name: Recreate container
+      docker_container:
+        name: blog
+        image: your-docker-image:latest
+        state: started
+        recreate: yes
+        published_ports:
+          - "3000:3000"

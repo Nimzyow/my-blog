@@ -1,0 +1,8 @@
+---
+- name: Deploy website
+  hosts: droplet
+  become: true
+  roles:
+    - docker
+    - nginx
+    - certbot
